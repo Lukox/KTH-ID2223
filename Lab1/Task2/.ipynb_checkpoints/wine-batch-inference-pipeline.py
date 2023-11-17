@@ -5,7 +5,7 @@ LOCAL=True
 
 if LOCAL == False:
    stub = modal.Stub()
-   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","sklearn==1.1.1","dataframe-image"])
+   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","scikit-learn==1.2.2","dataframe-image"])
    @stub.function(image=hopsworks_image, schedule=modal.Period(days=1), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
    def f():
        g()
@@ -27,46 +27,61 @@ def g():
     fs = project.get_feature_store()
     
     mr = project.get_model_registry()
-    model = mr.get_model("wine_model", version=3)
+    model = mr.get_model("wine_model", version=15)
     model_dir = model.download()
     model = joblib.load(model_dir + "/wine_model.pkl")
     
-    feature_view = fs.get_feature_view(name="wine", version=3)
+    feature_view = fs.get_feature_view(name="wine", version=1)
     batch_data = feature_view.get_batch_data()
-    
     y_pred = model.predict(batch_data)
-    #print(y_pred)
-    offset = 1
+        
+    offset = i
     wine_quality = y_pred[y_pred.size-offset]
-    wine_url = "https://raw.githubusercontent.com/featurestoreorg/serverless-ml-course/main/src/01-module/assets/" + wine_quality + ".png"
-    print("Quality predicted: " + wine_quality)
-    img = Image.open(requests.get(wine_url, stream=True).raw)            
-    img.save("./latest_wine.png")
+    print("Predicted Wine Quality: " + str(wine_quality))
+
+    os.makedirs("../resources/images/", exist_ok=True)
+    with open("../resources/images/latest_prediction.png", "wb") as gif:
+        gif.write(
+            requests.get(
+                "https://github.com/Lukox/KTH-ID2223/blob/main/Lab1/Task2/Assets/"+ str(wine_quality) +".png?raw=true"
+            ).content
+        )
+
+    #Upload Prediciton
     dataset_api = project.get_dataset_api()    
-    dataset_api.upload("./latest_wine.png", "Resources/images", overwrite=True)
+    dataset_api.upload("../resources/images/latest_prediction.png", "Resources/images", overwrite=True)
    
     wine_fg = fs.get_feature_group(name="wine", version=1)
     df = wine_fg.read() 
     #print(df)
     label = df.iloc[-offset]["quality"]
-    label_url = "https://raw.githubusercontent.com/featurestoreorg/serverless-ml-course/main/src/01-module/assets/" + label + ".png"
-    print("Actual Wine Quality: " + label)
-    img = Image.open(requests.get(label_url, stream=True).raw)            
-    img.save("./actual_quality.png")
-    dataset_api.upload("./actual_quality.png", "Resources/images", overwrite=True)
+    label = int(label)
+    print("Actual Wine Quality: "+ str(label))
+
+    with open("../resources/images/correct_prediction.png", "wb") as gif:
+        gif.write(
+            requests.get(
+                "https://github.com/Lukox/KTH-ID2223/blob/main/Lab1/Task2/Assets/"+ str(label) +".png?raw=true"
+            ).content
+        )
+
+    dataset_api.upload(
+        "../resources/images/correct_prediction.png", "Resources/images", overwrite=True
+    )
+
     
-    monitor_fg = fs.get_or_create_feature_group(name="wine",
-                                                version=3,
+    monitor_fg = fs.get_or_create_feature_group(name="wine_predictions",
+                                                version=1,
                                                 primary_key=["datetime"],
                                                 description="Wine Quality Prediction/Outcome Monitoring"
                                                 )
     
     now = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     data = {
-        'prediction': [wine_quality],
-        'label': [label],
-        'datetime': [now],
-       }
+            'prediction': [wine_quality],
+            'label': [label],
+            'datetime': [now],
+        }
     monitor_df = pd.DataFrame(data)
     monitor_fg.insert(monitor_df, write_options={"wait_for_job" : False})
     
@@ -77,9 +92,14 @@ def g():
 
 
     df_recent = history_df.tail(4)
-    dfi.export(df_recent, './df_recent.png', table_conversion = 'matplotlib')
-    dataset_api.upload("./df_recent.png", "Resources/images", overwrite=True)
+    dfi.export(
+        df_recent, "../resources/images/df_recent.png", table_conversion="matplotlib"
+    )
+    dataset_api.upload(
+        "../resources/images/df_recent.png", "Resources/images", overwrite=True
+    )
     
+    #HISTORY
     predictions = history_df[['prediction']]
     labels = history_df[['label']]
 
@@ -94,7 +114,7 @@ def g():
         cm = sns.heatmap(df_cm, annot=True)
         fig = cm.get_figure()
         fig.savefig("./confusion_matrix.png")
-        dataset_api.upload("./confusion_matrix.png", "Resources/images", overwrite=True)
+        dataset_api.upload("./wine_confusion_matrix.png", "Resources/images", overwrite=True)
     else:
         print("You need 6 different wine quality predictions to create the confusion matrix.")
         print("Run the batch inference pipeline more times until you get 6 different wine quality predictions") 
