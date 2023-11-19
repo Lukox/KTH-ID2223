@@ -49,7 +49,7 @@ def g():
     #Login to hopsworks and access wine feature group
     project = hopsworks.login()
     fs = project.get_feature_store()
-    wine_fg = fs.get_feature_group(name="wine",version=2)
+    wine_fg = fs.get_feature_group(name="wine",version=3)
 
     #Gets new wine and inserts into feature group
     new_wine_df = get_random_wine(wine_fg)

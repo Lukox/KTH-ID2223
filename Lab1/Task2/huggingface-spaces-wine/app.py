@@ -12,7 +12,7 @@ fs = project.get_feature_store()
 
 #download the training model from hopsworks 
 mr = project.get_model_registry()
-model = mr.get_model("wine_model", version=16)
+model = mr.get_model("wine_model", version=17)
 model_dir = model.download()
 model = joblib.load(model_dir + "/wine_model.pkl")
 print("Model downloaded")
