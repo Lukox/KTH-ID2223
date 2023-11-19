@@ -147,4 +147,3 @@ if __name__ == "__main__":
     else:
         with stub.run():
             f()
-
