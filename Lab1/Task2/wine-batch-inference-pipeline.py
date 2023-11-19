@@ -114,10 +114,10 @@ def g():
     #create a table with the 4 latest predictions and upload it onto hopsworks
     df_recent = history_df.tail(4)
     dfi.export(
-        df_recent, "../resources/images/df_recent.png", table_conversion="matplotlib"
+        df_recent, "../resources/images/wine_df_recent.png", table_conversion="matplotlib"
     )
     dataset_api.upload(
-        "../resources/images/df_recent.png", "Resources/images", overwrite=True
+        "../resources/images/wine_df_recent.png", "Resources/images", overwrite=True
     )
     
     #history of predictions and labels
