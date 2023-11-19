@@ -13,7 +13,7 @@ dataset_api = project.get_dataset_api()
 dataset_api.download("Resources/images/latest_prediction.png" ,overwrite=True)
 dataset_api.download("Resources/images/correct_prediction.png",overwrite=True)
 dataset_api.download("Resources/images/df_recent.png",overwrite=True)
-dataset_api.download("Resources/images/confusion_matrix.png",overwrite=True)
+dataset_api.download("Resources/images/wine_confusion_matrix.png",overwrite=True)
 
 #create a title and 2 columns to have the predicted quality and actual quality side by side
 st.title("Prediction Dashboard")
@@ -35,4 +35,4 @@ recent_predictions_img = st.image("df_recent.png", caption="Recent Predictions")
 
 #confusion matrix
 st.subheader("Confusion Matrix")
-confusion_matrix_img = st.image("confusion_matrix.png", caption="Confusion Matrix")
+confusion_matrix_img = st.image("wine_confusion_matrix.png", caption="Confusion Matrix")
