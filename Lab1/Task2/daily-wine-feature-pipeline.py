@@ -7,7 +7,7 @@ LOCAL=True
 #For deploying on modal
 if LOCAL == False:
    stub = modal.Stub("wine_daily")
-   image = modal.Image.debian_slim().pip_install(["hopsworks"]) 
+   image = modal.Image.debian_slim().pip_install(["hopsworks", "sdv"]) 
 
 #sets function to be executed every 24h on modal
    @stub.function(image=image, schedule=modal.Period(days=1), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
