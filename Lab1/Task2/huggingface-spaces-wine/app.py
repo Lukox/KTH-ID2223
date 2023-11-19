@@ -27,7 +27,7 @@ def predict_wine(fixed_acidity, volatile_acidity, citric_acid, residual_sugar, c
     print(df)
     
     #predict using the model: result = the predicted quality of the wine
-    result = model.predict(df)
+    result = round(model.predict(df))
 
     st.subheader("Predicted quality of the wine: " + str(result[0]))
     print(result)

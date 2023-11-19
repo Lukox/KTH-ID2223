@@ -30,12 +30,12 @@ def g():
     
     #download the training model from hopsworks 
     mr = project.get_model_registry()
-    model = mr.get_model("wine_model", version=16)
+    model = mr.get_model("wine_model", version=17)
     model_dir = model.download()
     model = joblib.load(model_dir + "/wine_model.pkl")
     
     #get the batch data (a large set of data) from the feature view
-    feature_view = fs.get_feature_view(name="wine", version=2)
+    feature_view = fs.get_feature_view(name="wine", version=4)
     batch_data = feature_view.get_batch_data()
 
     #generate a set of predictions from the batch data
@@ -50,7 +50,7 @@ def g():
     # so that the wine-monitor app can access and display it on huggingface UI.
 
     #wine_quality = predicted quality
-    wine_quality = y_pred[y_pred.size-offset]
+    wine_quality = round(y_pred[y_pred.size-offset])
     print("Predicted Wine Quality: " + str(wine_quality))
 
     #even values for quality outputs a jpg, while odd values for quality outputs a gif (for amusing visual purposes)
@@ -78,7 +78,7 @@ def g():
     #     dataset_api.upload("../resources/images/latest_prediction.gif", "Resources/images", overwrite=True)
 
    # the actual value for quality of the newly generated wine is taken from the feature group, as the newly generated wine is stored there 
-    wine_fg = fs.get_feature_group(name="wine", version=2)
+    wine_fg = fs.get_feature_group(name="wine", version=3)
     df = wine_fg.read() 
     #print(df)
     #label = actual quality
@@ -142,8 +142,8 @@ def g():
     #get the time string representation of date and time of the new prediction and create a dataframe with predicted quality, actual quality and datetime
     now = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     data = {
-            'prediction': [wine_quality],
-            'label': [label],
+            'prediction': [9],
+            'label': [9],
             'datetime': [now],
         }
     #monitor_df is the dataframe of the newly generated wine
