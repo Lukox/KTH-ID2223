@@ -53,64 +53,17 @@ def g():
     wine_quality = round(y_pred[y_pred.size-offset])
     print("Predicted Wine Quality: " + str(wine_quality))
 
-    #even values for quality outputs a jpg, while odd values for quality outputs a gif (for amusing visual purposes)
-
-
-    # if int(wine_quality) % 2 == 0:
-    #     os.makedirs("../resources/images/", exist_ok=True)
-    #     with open("../resources/images/latest_prediction.jpg", "wb") as gif:
-    #         gif.write(
-    #             requests.get(
-    #                 "https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/"+ str(wine_quality) +".jpg"
-    #             ).content
-    #         )
-    #     dataset_api = project.get_dataset_api()    
-    #     dataset_api.upload("../resources/images/latest_prediction.jpg", "Resources/images", overwrite=True)  
-    # else:
-    #     os.makedirs("../resources/images/", exist_ok=True)
-    #     with open("../resources/images/latest_prediction.gif", "wb") as gif:
-    #         gif.write(
-    #             requests.get(
-    #                 "https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/"+ str(wine_quality) +".gif"
-    #             ).content
-    #         )
-    #     dataset_api = project.get_dataset_api()    
-    #     dataset_api.upload("../resources/images/latest_prediction.gif", "Resources/images", overwrite=True)
-
    # the actual value for quality of the newly generated wine is taken from the feature group, as the newly generated wine is stored there 
     wine_fg = fs.get_feature_group(name="wine", version=3)
     df = wine_fg.read() 
-    #print(df)
+
     #label = actual quality
     label = df.iloc[-offset]["quality"]
     label = int(label)
     print("Actual Wine Quality: "+ str(label))
 
-    #even values for quality outputs a jpg, while odd values for quality outputs a gif (for amusing visual purposes) 
-    # if label % 2 == 0:
-    #     with open("../resources/images/correct_prediction.jpg", "wb") as gif:
-    #         gif.write(
-    #             requests.get(
-    #                 "https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/"+ str(label) +".jpg"
-    #             ).content
-    #         )
-
-    #     dataset_api.upload(
-    #         "../resources/images/correct_prediction.jpg", "Resources/images", overwrite=True
-    #     )
-    # else:
-    #     with open("../resources/images/correct_prediction.gif", "wb") as gif:
-    #         gif.write(
-    #             requests.get(
-    #                 "https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/"+ str(label) +".gif"
-    #             ).content
-    #         )
-
-    #     dataset_api.upload(
-    #         "../resources/images/correct_prediction.gif", "Resources/images", overwrite=True
-    #     )
-
-    dataset_api = project.get_dataset_api()    
+    dataset_api = project.get_dataset_api()
+        
     #if directory doesn't exist, create one to store the predicted quality and actual quality images
     os.makedirs("../resources/images/", exist_ok=True)
     with open("../resources/images/latest_prediction.png", "wb") as gif:
@@ -142,12 +95,14 @@ def g():
     #get the time string representation of date and time of the new prediction and create a dataframe with predicted quality, actual quality and datetime
     now = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     data = {
-            'prediction': [9],
-            'label': [9],
+            'prediction': [wine_quality],
+            'label': [label],
             'datetime': [now],
         }
     #monitor_df is the dataframe of the newly generated wine
     monitor_df = pd.DataFrame(data)
+
+    #inserts the new prediction into wine_predictions feature group
     monitor_fg.insert(monitor_df, write_options={"wait_for_job" : False})
     
     #history_df contains all the data of wines from the feature group
@@ -169,9 +124,9 @@ def g():
     predictions = history_df[['prediction']]
     labels = history_df[['label']]
 
-    # Only create the confusion matrix when our wine_predictions feature group has examples of all 6 wine qualities
+    # Only create the confusion matrix when our wine_predictions feature group has examples of all 7 wine qualities
     print("Number of different wine quality predictions to date: " + str(predictions.value_counts().count()))
-    #if predictions.value_counts().count() == 6:
+    #if predictions.value_counts().count() == 7:
     results = confusion_matrix(labels, predictions)
 
     df_cm = pd.DataFrame(results, ['True 3', 'True 4', 'True 5', 'True 6', 'True 7', 'True 8', 'True 9'],
@@ -179,11 +134,11 @@ def g():
 
     cm = sns.heatmap(df_cm, annot=True)
     fig = cm.get_figure()
-    fig.savefig("./confusion_matrix.png")
+    fig.savefig("./wine_confusion_matrix.png")
     dataset_api.upload("./wine_confusion_matrix.png", "Resources/images", overwrite=True)
     # else:
-    #     print("You need 6 different wine quality predictions to create the confusion matrix.")
-    #     print("Run the batch inference pipeline more times until you get 6 different wine quality predictions") 
+    #     print("You need 7 different wine quality predictions to create the confusion matrix.")
+    #     print("Run the batch inference pipeline more times until you get 7 different wine quality predictions") 
 
 
 if __name__ == "__main__":
