@@ -6,6 +6,7 @@ import joblib
 import pandas as pd
 from io import BytesIO
 
+
 #login into hopsworks project (API keys is a secret in huggingface which allows the correct project to be opened)
 project = hopsworks.login()
 fs = project.get_feature_store()
@@ -27,20 +28,20 @@ def predict_wine(fixed_acidity, volatile_acidity, citric_acid, residual_sugar, c
     print(df)
     
     #predict using the model: result = the predicted quality of the wine
-    result = round(model.predict(df))
+    result = round(model.predict(df)[0])
 
-    st.subheader("Predicted quality of the wine: " + str(result[0]))
+    st.subheader("Predicted quality of the wine: " + str(result))
     print(result)
     
     #even values for quality outputs a jpg, while odd values for quality outputs a gif (for amusing visual purposes)
-    if (result[0] % 2 == 0):
+    if (result % 2 == 0):
         print("even")
-        prediction_url = "https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/" + str(result[0]) + ".jpg"
+        prediction_url = "https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/" + str(result) + ".jpg"
         img = Image.open(BytesIO(requests.get(prediction_url).content))
         st.image(img)
     else:
         print("odd")
-        prediction_url = "![Alt Text](https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/" + str(result[0]) + ".gif)"
+        prediction_url = "![Alt Text](https://raw.githubusercontent.com/Lukox/KTH-ID2223/main/Lab1/Task2/Assets/" + str(result) + ".gif)"
         st.markdown(prediction_url)
 
 #using Streamlit ouput the title and heading
@@ -71,4 +72,3 @@ if st.button("Predict"):
 
     # Make prediction
     predict_wine(fixed_acidity, volatile_acidity, citric_acid, residual_sugar, chlorides, free_sulfur_dioxide, density, ph, sulphates, alcohol, wine_type)
-    
