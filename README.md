@@ -8,7 +8,7 @@ For Lab 2, we fine-tuned a transformer for language transcription to our mother 
 
 ## Interface
 
-We implemented a simple graphical user interface on Huggingface with Streamlit. One would be able to use a Youtube of any video, which would then be transcribed by our model. TO BE FINISHED
+We implemented a simple graphical user interface on Huggingface with Streamlit. One would be able to input a Youtube link of any video, which would then be transcribed by our model. Then, one can can choose a language to translate the transcribed text to, or keep the transcribed text in polish. Later, the original video is available to be played with the new transcribed text as subtitles corresponding to the sound of the video.
 
 ## Limitations
 
