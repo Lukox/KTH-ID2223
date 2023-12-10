@@ -1,0 +1,10 @@
+streamlit
+pytube
+moviepy
+transformers
+huggingface-hub
+torch
+pydub
+pysrt
+psutil
+pandas
