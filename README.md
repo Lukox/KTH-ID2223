@@ -20,7 +20,7 @@ We used various API endpoints to collect the data we need. First we used the Lea
 
 We produced models on two different datasets. The first one being raw data, which was just the champions drafted in each team using one hot encoding. The second dataset included engineered features, explained below: 
 
-ADD PICTURE
+![Features](https://github.com/Lukox/KTH-ID2223/blob/Project/assets/feature.png?raw=true)
 
 - **`blueTopRating`**: This metric represents the win rating of the blue side's top lane, ranging from -1 to 1, where 1 indicates a higher likelihood of winning.
 - **`blueJgRating`**: Similar to `blueTopRating`, this parameter denotes the win rating for the blue side's jungle role.
