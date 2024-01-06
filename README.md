@@ -1,5 +1,29 @@
 # KTH-ID2223 : Scalable Machine Learning and Deep Learning Course
 
+# Project
+
+# Pre-game League of Legends Predictions
+
+## Introduction
+
+League of Legends is a highly popular multiplayer online battle arena (MOBA) game developed by Riot Games. Released in 2009, it features two teams of five players each, choosing unique champions with distinct abilities to compete in strategic battles. The goal is to destroy the opposing team's Nexus in their base. Known for its dynamic gameplay and diverse champion roster, League of Legends attracts millions of players and viewers worldwide. 
+
+Before every game, teams strategically select their champions, shaping the battlefield and influencing the outcome. This is known as drafting. The process involves alternating picks and bans, with each team aiming to create a well-rounded and synergistic composition while countering the opponent's choices. Champions are chosen based on their roles, strengths, and potential interactions with teammates. A successful draft can give a team a strategic advantage, setting the stage for intense and dynamic gameplay. We propose a model to predict the outcome of a League of Legends game right after the drafting stage, beforne any game actions.
+
+## The Dataset
+
+![Riot API](https://codepull.com/wp-content/uploads/2022/06/image-1-1024x406.png)
+
+
+
+
+
+
+
+
+
+
+
 # Lab 2
 
 ## Fine-tuning Whisper
