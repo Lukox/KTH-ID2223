@@ -12,16 +12,28 @@ Before every game, teams strategically select their champions, shaping the battl
 
 ## The Dataset
 
+Utilizing the Riot API, we are actively gathering comprehensive data for our machine learning model aimed at predicting pre-game outcomes in League of Legends. This API provides real-time information on player statistics, match histories, and in-game dynamics, allowing us to identify patterns and key factors influencing match results. By leveraging this data, our model is designed to offer accurate and dynamic predictions, adapting to the evolving nuances of League of Legends gameplay.
+
+We used various API endpoints to collect the data we need. First we used the League-V4 endpoint to find random players in all ranks of League of Legends from which we obtained 100,000 most recent matches. We filtered the games to be ranked, which is a competitive gamemode in order to reduce unpredictability and ensure maximum accuracy. From each of the games, we gathered data, including champions, positions, and more, from which we made our dataset. 
+
 ![Riot API](https://codepull.com/wp-content/uploads/2022/06/image-1-1024x406.png)
 
+ADD PICTURE
 
+We produced models on two different datasets. The first one being raw data, which was just the champions drafted in each team using one hot encoding. The second dataset included engineered features, explained below: 
 
-
-
-
-
-
-
+*'blueTopRating': This metric represents the win rating of the blue side's top lane, ranging from -1 to 1, where 1 indicates a higher likelihood of winning.
+*'blueJgRating': Similar to blueTopRating, this parameter denotes the win rating for the blue side's jungle role.
+*'blueMidRating': Reflecting the win rating for the blue side's mid lane, this score helps assess the team's performance in the middle lane.
+*'blueBotRating': Reflecting the win rating for the blue side's mid lane, this score helps assess the team's performance in the middle lane.
+*'blueSupRating': Specifically for the blue side's support role, this rating indicates the likelihood of winning based on historical data.
+*'redTopRating', 'redJgRating', 'redMidRating', 'redBotRating', 'redSupRating': Analogous to their blue counterparts, these metrics provide win ratings for the respective roles on the red side.
+*'blueAvgMasteryLevel': This parameter signifies the average mastery level of champions for the blue team, offering insights into their collective champion proficiency.
+*'blueAvgMasteryPoints': Similar to blueAvgMasteryLevel, this metric represents the average mastery points of champions on the blue team, providing a measure of their experience with their chosen champions.
+*'redAvgMasteryLevel', 'redAvgMasteryPoints': These are the red team equivalents of the blueAvgMasteryLevel and blueAvgMasteryPoints, representing the average mastery level and points for the red team.
+*'blueSynergyScore', 'redSynergyScore': These scores range from -1 to 1, indicating how well the champions in each team work together. It is calculated based on the frequency of winning games when specific champion combinations are present on the same team.
+*'topDelta, 'jgDelta', 'midDelta', 'botDelta', 'supDelta': These parameters reflect the frequency with which champions in each role on the blue team beat their counterparts on the red team. A value of -1 indicates a higher frequency for the blue team, while 1 indicates a higher frequency for the red team.
+*'teamWin':  This binary parameter signifies the overall outcome, with 0 indicating a blue team victory and 1 indicating a red team victory.
 
 
 # Lab 2
