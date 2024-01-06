@@ -71,8 +71,11 @@ We ran the files in this order:
 2) `training-pipeline.ipynb` - trains the model and uploads it on Google Drive.
 3) `feature-pipeline.py` - collects new matches every day and combine them to previous data on Google Drive. 
 4) `retraining-pipeline.py` - retrains the model on the updated dataset every 2 weeks and uploads it to Google Drive.
-5) `app.py` - HuggingFace Spaces UI where player can input their summoner name to obtain the game predictions of their live game or their last couple of games. 
+5) `app.py` - HuggingFace Spaces UI where player can input their summoner name to obtain the game predictions of their live game or their last couple of games.
+
+   
 ![UI](https://github.com/Lukox/KTH-ID2223/blob/main/Project/assets/ui.png)
+
 # Lab 2
 
 ## Fine-tuning Whisper
