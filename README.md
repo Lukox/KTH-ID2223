@@ -45,6 +45,14 @@ Since League of Legends has millions of games played every day, the dataset is v
  
 ## The Results
 
+In the results section, our initial raw data approach yielded a maximum accuracy of 54%, marginally surpassing random chance. This outcome suggests that predicting League of Legends game outcomes based solely on champion IDs and feature crosses might be challenging, indicating that draft dynamics alone may not be highly indicative of match results. It appears that the intrinsic variability introduced by player skill and decision-making may play a significant role in the unpredictability of game outcomes during the drafting phase.
+
+In contrast, the engineered features approach demonstrated more promising results, achieving a maximum accuracy of 70.8%. This unexpected success, given the inherent unpredictability of League of Legends, underscores the significance of the engineered features in capturing crucial aspects of player performance. The higher accuracy suggests that our model, trained on these enhanced features, is better able to discern patterns and relationships that contribute to predicting game outcomes more effectively. This result prompts further exploration into the engineered features and the potential insights they offer into the intricate dynamics of League of Legends matches, emphasizing the importance of considering player performance as a crucial factor in pre-game predictions. 
+
+We used our model in ou inference application on [HuggingFace Spaces](https://huggingface.co/spaces/Lukox/League) where one can input a summoner username and the application will display predictions and actual outcomes of the last few games. In the scenario the summoner is currently playing a game, an extra feature is the live prediction of the outcome of that game. 
+
+## Limitations and Further Explorations
+
 
 # Lab 2
 
