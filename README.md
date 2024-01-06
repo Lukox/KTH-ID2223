@@ -67,7 +67,7 @@ In conclusion, overcoming the limitations posed by API constraints and refining 
 We ran the files in this order:
 1) `backfill-feature-pipeline.ipynb` - collects the matches and transforms raw data into features, then stores it on Google Drive.
 2) `training-pipeline.ipynb` - trains the model and uploads it on Google Drive.
-3) `feature-pipeline.py` - collects new matches every day and combine them to previous data on Google Drive. 
+3) `feature-pipeline.py` - collects new matches every day and combines them to previous data on Google Drive. 
 4) `retraining-pipeline.py` - retrains the model on the updated dataset every 2 weeks and uploads it to Google Drive.
 5) `app.py` - HuggingFace Spaces UI where player can input their summoner name to obtain the game predictions of their live game or their last couple of games.
 
