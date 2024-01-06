@@ -1,5 +1,78 @@
 # KTH-ID2223 : Scalable Machine Learning and Deep Learning Course
 
+# Project
+
+# Pre-game League of Legends Predictions
+
+## Introduction
+
+League of Legends is a highly popular multiplayer online battle arena (MOBA) game developed by Riot Games. Released in 2009, it features two teams of five players each, choosing unique champions with distinct abilities to compete in strategic battles. The goal is to destroy the opposing team's Nexus in their base. Known for its dynamic gameplay and diverse champion roster, League of Legends attracts millions of players and viewers worldwide. 
+
+Before every game, teams strategically select their champions, shaping the battlefield and influencing the outcome. This is known as drafting. The process involves alternating picks and bans, with each team aiming to create a well-rounded and synergistic composition while countering the opponent's choices. Champions are chosen based on their roles, strengths, and potential interactions with teammates. A successful draft can give a team a strategic advantage, setting the stage for intense and dynamic gameplay. We propose a model to predict the outcome of a League of Legends game right after the drafting stage, beforne any game actions.
+
+## The Dataset
+
+Utilizing the Riot API, we are actively gathering comprehensive data for our machine learning model aimed at predicting pre-game outcomes in League of Legends. This API provides real-time information on player statistics, match histories, and in-game dynamics, allowing us to identify patterns and key factors influencing match results. By leveraging this data, our model is designed to offer accurate and dynamic predictions, adapting to the evolving nuances of League of Legends gameplay.
+
+We used various API endpoints to collect the data we need. First we used the League-V4 endpoint to find random players in all ranks of League of Legends from which we obtained 100,000 most recent matches. We filtered the games to be ranked, which is a competitive gamemode in order to reduce unpredictability and ensure maximum accuracy. From each of the games, we gathered data, including champions, positions, and more, from which we made our dataset. 
+
+![Riot API](https://codepull.com/wp-content/uploads/2022/06/image-1-1024x406.png)
+
+We produced models on two different datasets. The first one being raw data, which was just the champions drafted in each team using one hot encoding. The second dataset included engineered features, explained below: 
+
+ADD PICTURE
+
+- **`blueTopRating`**: This metric represents the win rating of the blue side's top lane, ranging from -1 to 1, where 1 indicates a higher likelihood of winning.
+- **`blueJgRating`**: Similar to `blueTopRating`, this parameter denotes the win rating for the blue side's jungle role.
+- **`blueMidRating`**: Reflecting the win rating for the blue side's mid lane, this score helps assess the team's performance in the middle lane.
+- **`blueBotRating`**: Corresponding to the blue side's bottom lane (AD Carry), this metric provides a win rating for that specific role.
+- **`blueSupRating`**: Specifically for the blue side's support role, this rating indicates the likelihood of winning based on historical data.
+- **`redTopRating`**, **`redJgRating`**, **`redMidRating`**, **`redBotRating`**, **`redSupRating`**: Analogous to their blue counterparts, these metrics provide win ratings for the respective roles on the red side.
+- **`blueAvgMasteryLevel`**: This parameter signifies the average mastery level of champions for the blue team, offering insights into their collective champion proficiency.
+- **`blueAvgMasteryPoints`**: Similar to `blueAvgMasteryLevel`, this metric represents the average mastery points of champions on the blue team, providing a measure of their experience with their chosen champions.
+- **`redAvgMasteryLevel`**, **`redAvgMasteryPoints`**: These are the red team equivalents of the `blueAvgMasteryLevel` and `blueAvgMasteryPoints`, representing the average mastery level and points for the red team.
+- **`blueSynergyScore`**, **`redSynergyScore`**: These scores range from -1 to 1, indicating how well the champions in each team work together. It is calculated based on the frequency of winning games when specific champion combinations are present on the same team.
+- **`topDelta`**, **`jgDelta`**, **`midDelta`**, **`botDelta`**, **`supDelta`**: These parameters reflect the frequency with which champions in each role on the blue team beat their counterparts on the red team. A value of -1 indicates a higher frequency for the blue team, while 1 indicates a higher frequency for the red team.
+- **`teamWin`**: This binary parameter indicates the overall outcome of the game. A value of 0 denotes a victory for the blue team, while a value of 1 signifies a victory for the red team.
+
+The ratings for the Synergies, Deltas and Winrates were taken from data of 100,000 games, which we stores in matrices, providing information on champion win and losses, how often champions win together and how often they lose against others. 
+
+Our data turned out to be relatively balanced, with 5015 wins on blue side and 4985 wins on red side out of 10000 games, making it a suitable dataset for our prediction model. 
+
+## The Method
+
+In our first model creation approach, we started with raw data, specifically the champion IDs of each player. Employing feature crosses, we generated additional features and labeled the team indicator. Our primary model for this approach was a neural network. We split the data into training and testing sets, processed the raw features, and trained the neural network to predict game outcomes. For the second approach, we utilized engineered features derived from extensive data analysis. Our modeling efforts involved experimenting with various machine learning models, including a Random Forest Classifier and different neural network architectures. To optimize the neural network's hyperparameters, we employed black-box optimization techniques such as grid search. The objective was to enhance the model's predictive performance by systematically exploring the hyperparameter space. Both approaches aimed to predict the pre-game outcomes of League of Legends matches, with the first focusing on raw data and feature crosses, and the second leveraging engineered features and advanced model selection techniques. The features were collected in our `backfill-feature-pipeline.ipynb`, and the training for both approaches was does in the `training-pipeline.ipynb`.
+
+Since League of Legends has millions of games played every day, the dataset is very dynamic, thus everyday using Modal, we collect new matches and their data and combine it in our feature store on Google Drive with our historical data using the `feature-pipeline.py`. Every two weeks, whenever a new patch is released, we retrain the models on our new data with the `retraining-pipeline.py`, also using Modal on cloud so it is done automatically. The model is then saved in our feature store which we then download for our inference application. 
+ 
+## The Results
+
+In the results section, our initial raw data approach yielded a maximum accuracy of 54%, marginally surpassing random chance. This outcome suggests that predicting League of Legends game outcomes based solely on champion IDs and feature crosses might be challenging, indicating that draft dynamics alone may not be highly indicative of match results. It appears that the intrinsic variability introduced by player skill and decision-making may play a significant role in the unpredictability of game outcomes during the drafting phase.
+
+In contrast, the engineered features approach demonstrated more promising results, achieving a maximum accuracy of 70.8%. This unexpected success, given the inherent unpredictability of League of Legends, underscores the significance of the engineered features in capturing crucial aspects of player performance. The higher accuracy suggests that our model, trained on these enhanced features, is better able to discern patterns and relationships that contribute to predicting game outcomes more effectively. This result prompts further exploration into the engineered features and the potential insights they offer into the intricate dynamics of League of Legends matches, emphasizing the importance of considering player performance as a crucial factor in pre-game predictions. 
+
+We used our model in ou inference application on [HuggingFace Spaces](https://huggingface.co/spaces/Lukox/League) where one can input a summoner username and the application will display predictions and actual outcomes of the last few games. In the scenario the summoner is currently playing a game, an extra feature is the live prediction of the outcome of that game. 
+
+## Limitations 
+One major limitation of our study lies in the constraints of data collection through the Riot API. The API imposes limitations on the number of calls per second and minute, hindering our ability to gather a more extensive dataset efficiently. For instance, the retrieval of data for approximately 10,000 games required around 200,000 API calls, spanning a time frame of approximately 11 days. Improved access to the Riot API, with a higher rate limit, could significantly improve data collection and enable a more comprehensive exploration of League of Legends match data.
+
+Another limitation our study was the RIOT API was often unvailable, which halted progress as data could no longer be collected.
+
+## Further Explorations
+To enhance the robustness of our predictive models, further exploration could take multiple approaches. Firstly, focusing exclusively on the highest ranks or specific elos may offer insights into games where player performance is more consistent and there is less inherent unpredictability. This targeted approach could potentially yield higher accuracy scores and more reliable predictions.
+
+Additionally, incorporating individual player performance metrics, such as win rates, winning or losing streaks, and other relevant statistics, could be a interesting area for exploration. These player-centric features might provide valuable context, allowing the model to better account for the influence of individual player skills and tendencies on game outcomes. However, it's important to note that implementing this approach effectively would require a substantially higher number of API calls.
+
+In conclusion, overcoming the limitations posed by API constraints and refining the focus of our dataset to include higher-ranked games or individual player performance metrics could unlock new dimensions of understanding and significantly improve the accuracy of our predictive models in forecasting League of Legends pre-game outcomes.
+
+## How to run
+We ran the files in this order:
+1) `backfill-feature-pipeline.ipynb` - collects the matches and transforms raw data into features, then stores it on Google Drive.
+2) `training-pipeline.ipynb` - trains the model and uploads it on Google Drive.
+3) `feature-pipeline.py` - collects new matches every day and combine them to previous data on Google Drive. 
+4) `retraining-pipeline.py` - retrains the model on the updated dataset every 2 weeks and uploads it to Google Drive.
+5) `app.py` - HuggingFace Spaces UI where player can input their summoner name to obtain the game predictions of their live game or their last couple of games. 
+
 # Lab 2
 
 ## Fine-tuning Whisper
