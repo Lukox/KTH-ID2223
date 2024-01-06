@@ -56,6 +56,8 @@ We used our model in ou inference application on [HuggingFace Spaces](https://hu
 ## Limitations 
 One major limitation of our study lies in the constraints of data collection through the Riot API. The API imposes limitations on the number of calls per second and minute, hindering our ability to gather a more extensive dataset efficiently. For instance, the retrieval of data for approximately 10,000 games required around 200,000 API calls, spanning a time frame of approximately 11 days. Improved access to the Riot API, with a higher rate limit, could significantly improve data collection and enable a more comprehensive exploration of League of Legends match data.
 
+Another limitation our study was the RIOT API was often unvailable, which halted progress as data could no longer be collected.
+
 ## Further Explorations
 To enhance the robustness of our predictive models, further exploration could take multiple approaches. Firstly, focusing exclusively on the highest ranks or specific elos may offer insights into games where player performance is more consistent and there is less inherent unpredictability. This targeted approach could potentially yield higher accuracy scores and more reliable predictions.
 
