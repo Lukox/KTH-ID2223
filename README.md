@@ -18,7 +18,7 @@ We used various API endpoints to collect the data we need. First we used the Lea
 
 ![Riot API](https://codepull.com/wp-content/uploads/2022/06/image-1-1024x406.png)
 
-We produced models on two different datasets. The first one being raw data, which was just the champions drafted in each team using one hot encoding. The second dataset included engineered features, explained below: 
+We produced models on two different datasets. The first one being raw data, which was just the champions drafted in each team using one hot encoding. The second dataset included engineered features, displayed and explained below: 
 
 ![Features](https://github.com/Lukox/KTH-ID2223/blob/main/Project/assets/features.png)
 
@@ -72,7 +72,7 @@ We ran the files in this order:
 3) `feature-pipeline.py` - collects new matches every day and combine them to previous data on Google Drive. 
 4) `retraining-pipeline.py` - retrains the model on the updated dataset every 2 weeks and uploads it to Google Drive.
 5) `app.py` - HuggingFace Spaces UI where player can input their summoner name to obtain the game predictions of their live game or their last couple of games. 
-
+![UI](https://github.com/Lukox/KTH-ID2223/blob/main/Project/assets/ui.png)
 # Lab 2
 
 ## Fine-tuning Whisper
