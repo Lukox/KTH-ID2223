@@ -1,8 +1,6 @@
 # KTH-ID2223 : Scalable Machine Learning and Deep Learning Course
 
-# Project
-
-# Pre-game League of Legends Predictions
+# Project: Pre-game League of Legends Predictor
 
 ## Introduction
 
