@@ -18,9 +18,9 @@ We used various API endpoints to collect the data we need. First we used the Lea
 
 ![Riot API](https://codepull.com/wp-content/uploads/2022/06/image-1-1024x406.png)
 
-ADD PICTURE
-
 We produced models on two different datasets. The first one being raw data, which was just the champions drafted in each team using one hot encoding. The second dataset included engineered features, explained below: 
+
+ADD PICTURE
 
 - **`blueTopRating`**: This metric represents the win rating of the blue side's top lane, ranging from -1 to 1, where 1 indicates a higher likelihood of winning.
 - **`blueJgRating`**: Similar to `blueTopRating`, this parameter denotes the win rating for the blue side's jungle role.
@@ -34,6 +34,16 @@ We produced models on two different datasets. The first one being raw data, whic
 - **`blueSynergyScore`**, **`redSynergyScore`**: These scores range from -1 to 1, indicating how well the champions in each team work together. It is calculated based on the frequency of winning games when specific champion combinations are present on the same team.
 - **`topDelta`**, **`jgDelta`**, **`midDelta`**, **`botDelta`**, **`supDelta`**: These parameters reflect the frequency with which champions in each role on the blue team beat their counterparts on the red team. A value of -1 indicates a higher frequency for the blue team, while 1 indicates a higher frequency for the red team.
 - **`teamWin`**: This binary parameter indicates the overall outcome of the game. A value of 0 denotes a victory for the blue team, while a value of 1 signifies a victory for the red team.
+
+Our data turned out to be relatively balanced, with 5015 wins on blue side and 4985 wins on red side out of 10000 games, making it a suitable dataset for our prediction model. 
+
+## The Method
+
+In our first model creation approach, we started with raw data, specifically the champion IDs of each player. Employing feature crosses, we generated additional features and labeled the team indicator. Our primary model for this approach was a neural network. We split the data into training and testing sets, processed the raw features, and trained the neural network to predict game outcomes. For the second approach, we utilized engineered features derived from extensive data analysis. Our modeling efforts involved experimenting with various machine learning models, including a Random Forest Classifier and different neural network architectures. To optimize the neural network's hyperparameters, we employed black-box optimization techniques such as grid search. The objective was to enhance the model's predictive performance by systematically exploring the hyperparameter space. Both approaches aimed to predict the pre-game outcomes of League of Legends matches, with the first focusing on raw data and feature crosses, and the second leveraging engineered features and advanced model selection techniques. The features were collected in our backfill-feature-pipeline.ipynb, and the training for both approaches was does in the training-pipeline.ipynb.
+
+Since League of Legends has millions of games played every day, the dataset is very dynamic, thus everyday using Modal, we collect new matches and their data and combine it in our feature store on Google Drive with our historical data using the feature-pipeline.py. Every two weeks, whenever a new patch is released, we retrain the models on our new data with the retraining-pipeline.py, also using Modal on cloud so it is done automatically. The model is then saved in our feature store which we then download for our inference application. 
+ 
+## The Results
 
 
 # Lab 2
