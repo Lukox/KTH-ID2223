@@ -35,6 +35,8 @@ ADD PICTURE
 - **`topDelta`**, **`jgDelta`**, **`midDelta`**, **`botDelta`**, **`supDelta`**: These parameters reflect the frequency with which champions in each role on the blue team beat their counterparts on the red team. A value of -1 indicates a higher frequency for the blue team, while 1 indicates a higher frequency for the red team.
 - **`teamWin`**: This binary parameter indicates the overall outcome of the game. A value of 0 denotes a victory for the blue team, while a value of 1 signifies a victory for the red team.
 
+The ratings for the Synergies, Deltas and Winrates were taken from data of 100,000 games, which we stores in matrices, providing information on champion win and losses, how often champions win together and how often they lose against others. 
+
 Our data turned out to be relatively balanced, with 5015 wins on blue side and 4985 wins on red side out of 10000 games, making it a suitable dataset for our prediction model. 
 
 ## The Method
@@ -51,8 +53,23 @@ In contrast, the engineered features approach demonstrated more promising result
 
 We used our model in ou inference application on [HuggingFace Spaces](https://huggingface.co/spaces/Lukox/League) where one can input a summoner username and the application will display predictions and actual outcomes of the last few games. In the scenario the summoner is currently playing a game, an extra feature is the live prediction of the outcome of that game. 
 
-## Limitations and Further Explorations
+## Limitations 
+One major limitation of our study lies in the constraints of data collection through the Riot API. The API imposes limitations on the number of calls per second and minute, hindering our ability to gather a more extensive dataset efficiently. For instance, the retrieval of data for approximately 10,000 games required around 200,000 API calls, spanning a time frame of approximately 11 days. Improved access to the Riot API, with a higher rate limit, could significantly improve data collection and enable a more comprehensive exploration of League of Legends match data.
 
+## Further Explorations
+To enhance the robustness of our predictive models, further exploration could take multiple approaches. Firstly, focusing exclusively on the highest ranks or specific elos may offer insights into games where player performance is more consistent and there is less inherent unpredictability. This targeted approach could potentially yield higher accuracy scores and more reliable predictions.
+
+Additionally, incorporating individual player performance metrics, such as win rates, winning or losing streaks, and other relevant statistics, could be a interesting area for exploration. These player-centric features might provide valuable context, allowing the model to better account for the influence of individual player skills and tendencies on game outcomes. However, it's important to note that implementing this approach effectively would require a substantially higher number of API calls.
+
+In conclusion, overcoming the limitations posed by API constraints and refining the focus of our dataset to include higher-ranked games or individual player performance metrics could unlock new dimensions of understanding and significantly improve the accuracy of our predictive models in forecasting League of Legends pre-game outcomes.
+
+## How to run
+We ran the files in this order:
+1) `backfill-feature-pipeline.ipynb` - collects the matches and transforms raw data into features, then stores it on Google Drive.
+2) `training-pipeline.ipynb` - trains the model and uploads it on Google Drive.
+3) `feature-pipeline.py` - collects new matches every day and combine them to previous data on Google Drive. 
+4) `retraining-pipeline.py` - retrains the model on the updated dataset every 2 weeks and uploads it to Google Drive.
+5) `app.py` - HuggingFace Spaces UI where player can input their summoner name to obtain the game predictions of their live game or their last couple of games. 
 
 # Lab 2
 
